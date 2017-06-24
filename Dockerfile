@@ -39,6 +39,7 @@ USER softioc
 RUN git clone https://github.com/klauer/motorsim --single-branch --branch homebrew-epics /epics/iocs/motorsim
 
 RUN sed -i 's#/usr/local/#/home/softioc/.linuxbrew/#' /epics/iocs/motorsim/configure/*
+RUN sed -i 's/darwin-x86/linux-x86_64/' /epics/iocs/motorsim/iocBoot/ioclocalhost/Makefile
 RUN bash -c "source epics_env.sh && \
              cd /epics/iocs/motorsim && \
              make"
