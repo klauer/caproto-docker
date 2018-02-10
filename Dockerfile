@@ -6,40 +6,56 @@ USER root
 RUN apt-get update
 # get areadetector dependencies
 RUN apt-get install -yq libhdf5-dev libx11-dev libxext-dev libxml2-dev libpng12-dev libbz2-dev libfreetype6-dev
-RUN apt-get install -yq build-essential curl file git python-setuptools ruby
-
-RUN mkdir -p /epics/iocs /epics/src
+RUN apt-get install -yq build-essential curl file git gawk re2c
 
 # - setup the softioc user
-RUN useradd -ms /bin/bash softioc
+RUN useradd -ms /bin/bash -d /epics softioc
+RUN mkdir -p /epics/iocs /epics/src
+
 USER softioc
-WORKDIR /home/softioc
-
-# - install homebrew and epics
-RUN git clone https://github.com/Linuxbrew/brew.git $HOME/.linuxbrew
-ENV PATH="/home/softioc/.linuxbrew/bin:${PATH}"
-
-# RUN brew install perl --without-test
-# TODO: i'm too lazy...
-RUN mkdir -p /home/softioc/.linuxbrew/Cellar/perl
-RUN ln -s /usr /home/softioc/.linuxbrew/Cellar/perl/5.24.1
-
-RUN brew tap klauer/homebrew-epics
-RUN brew install epics-base
-RUN brew install epics-motor
-RUN brew install --HEAD klauer/epics/pyepics-test-ioc
-RUN brew install epics-autosave
-
-# TODO move this up
 USER root
+
 RUN chown -R softioc:softioc /epics
 USER softioc
 
-# - install motorsim
-RUN git clone https://github.com/klauer/motorsim --single-branch --branch homebrew-epics /epics/iocs/motorsim
+ENV CI_ROOT="/epics/ci"
+ENV CI_SCRIPTS="$CI_ROOT/ci-scripts"
 
-RUN sed -i 's#/usr/local/#/home/softioc/.linuxbrew/#' /epics/iocs/motorsim/configure/*
-RUN sed -i 's/darwin-x86/linux-x86_64/' /epics/iocs/motorsim/iocBoot/ioclocalhost/Makefile
-RUN bash -c "source epics_env.sh && \
-             cd /epics/iocs/motorsim && \
-             make"
+RUN git clone https://github.com/klauer/epics-on-travis $CI_ROOT
+
+# R3.14
+ENV BASE=R3.14.12.6 V4= BUSY=1-6-1 SEQ=2.2.5 ASYN=4-32 CALC=3-7 AUTOSAVE=5-9 SSCAN=2-11-1 MOTOR=6-9 AREADETECTOR=3-2
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-base.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-modules.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-areadetector.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-iocs.sh" ]
+
+# R3.15
+ENV BASE=R3.15.5 V4=4.7.0 BUSY=1-6-1 SEQ=2.2.5 ASYN=4-32 CALC=3-7 AUTOSAVE=5-9 SSCAN=2-11-1 MOTOR=6-9 AREADETECTOR=3-2
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-base.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-v4.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-modules.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-areadetector.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-iocs.sh" ]
+
+# R3.16
+ENV BASE=R3.16.1 V4=4.7.0 BUSY=1-6-1 SEQ=2.2.5 ASYN=4-32 CALC=3-7 AUTOSAVE=5-9 SSCAN=2-11-1 MOTOR=6-10 AREADETECTOR=3-2
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-base.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-v4.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-modules.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-areadetector.sh" ]
+RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+     bash $CI_SCRIPTS/install-epics-iocs.sh" ]
