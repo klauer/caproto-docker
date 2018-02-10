@@ -29,13 +29,13 @@ RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
      bash $CI_SCRIPTS/install-epics-base.sh" ]
 RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
      bash $CI_SCRIPTS/install-epics-modules.sh" ]
-RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
+RUN ["/bin/bash", "-c", "cd $CI_ROOT && git pull && source $CI_SCRIPTS/epics-config.sh && \
      bash $CI_SCRIPTS/install-epics-areadetector.sh" ]
 RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
      bash $CI_SCRIPTS/install-epics-iocs.sh" ]
 
 # R3.15
-ENV BASE=R3.15.5 V4=4.7.0 BUSY=1-6-1 SEQ=2.2.5 ASYN=4-32 CALC=3-7 AUTOSAVE=5-9 SSCAN=2-11-1 MOTOR=6-9 AREADETECTOR=3-2
+ENV BASE=R3.15.5 PVA=4.7.0 BUSY=1-6-1 SEQ=2.2.5 ASYN=4-32 CALC=3-7 AUTOSAVE=5-9 SSCAN=2-11-1 MOTOR=6-9 AREADETECTOR=3-2
 RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
      bash $CI_SCRIPTS/install-epics-base.sh" ]
 RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
@@ -48,7 +48,7 @@ RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
      bash $CI_SCRIPTS/install-epics-iocs.sh" ]
 
 # R3.16
-ENV BASE=R3.16.1 V4=4.7.0 BUSY=1-6-1 SEQ=2.2.5 ASYN=4-32 CALC=3-7 AUTOSAVE=5-9 SSCAN=2-11-1 MOTOR=6-10 AREADETECTOR=3-2
+ENV BASE=R3.16.1 PVA=4.7.0 BUSY=1-6-1 SEQ=2.2.5 ASYN=4-32 CALC=3-7 AUTOSAVE=5-9 SSCAN=2-11-1 MOTOR=6-10 AREADETECTOR=3-2
 RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
      bash $CI_SCRIPTS/install-epics-base.sh" ]
 RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
