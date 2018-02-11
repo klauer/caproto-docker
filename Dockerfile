@@ -59,3 +59,6 @@ RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
      bash $CI_SCRIPTS/install-epics-areadetector.sh" ]
 RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
      bash $CI_SCRIPTS/install-epics-iocs.sh" ]
+
+# Clean up
+RUN rm -rf /epics/build
