@@ -62,3 +62,8 @@ RUN ["/bin/bash", "-c", "source $CI_SCRIPTS/epics-config.sh && \
 
 # Clean up
 RUN rm -rf /epics/build
+RUN find /epics -name 'O.*' |xargs rm -rf
+
+USER root
+RUN apt-get install tmux
+USER softioc
